@@ -1,0 +1,116 @@
+<!DOCTYPE >
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Form</title>
+  <link rel="stylesheet" href="./css.css" />
+</head>
+
+<body>
+
+  <h1 id="formTitle">Add User</h1>
+
+  <form id="userForm">
+
+    <input type="hidden" id="userId" />
+    <label>Name: 
+    <input type="text" id="name" required />
+    </label>
+
+    <br />
+
+    <label>Email: 
+    <input type="email" id="email" required />
+    </label>
+
+    <br />
+
+    <button type="submit">Save</button>
+
+  </form>
+
+ <script>
+ 
+  var users = localStorage.getItem("users");
+  if (users) 
+  {
+    users = JSON.parse(users);
+  } 
+  else 
+  {
+    users = [];
+  }
+
+  var url = window.location.search;
+  var params = new URLSearchParams(url);
+  var id = params.get("id");
+
+ 
+  if (id) 
+  {
+    for (var i = 0; i < users.length; i++) 
+    {
+      if (users[i].id == id) 
+      {
+        document.getElementById("formTitle").innerText = "Update User";
+        document.getElementById("userId").value = users[i].id;
+        document.getElementById("name").value = users[i].name;
+        document.getElementById("email").value = users[i].email;
+        break;
+      }
+    }
+  }
+
+
+  document.getElementById("userForm").onsubmit = function(e) {
+    e.preventDefault();
+
+    var userId = document.getElementById("userId").value;
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+
+    if (userId) 
+    {
+      
+      for (var i = 0; i < users.length; i++) 
+      {
+
+        if (users[i].id == userId) 
+        {
+          users[i].name = name;
+          users[i].email = email;
+
+          break;
+        }
+
+      }
+
+    } 
+
+    else 
+    {
+      
+      let lastId = users.length ? users[users.length - 1].id : 0;
+
+      let newUser = 
+    {
+      id: lastId + 1,
+      name,
+      email
+      
+    };
+
+
+      users.push(newUser);
+
+    }
+
+    localStorage.setItem("users", JSON.stringify(users));
+    window.location.href = "html.html";
+
+  };
+
+  </script>
+
+</body>
+</html>
